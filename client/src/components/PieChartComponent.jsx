@@ -63,9 +63,9 @@ const PieChartComponent = ({ logs }) => {
       animationFrame = requestAnimationFrame(increment);
     };
     increment();
-    return () => cancelAnimationFrame(animationFrame); // Clean up
+    return () => cancelAnimationFrame(animationFrame);
   }, [failureRate]);
-
+  console.log(failureRate);
   return (
     <div className="pie-chart-needle-wrapper">
       <PieChart width={300} height={300}>
@@ -87,7 +87,9 @@ const PieChartComponent = ({ logs }) => {
         </Pie>
         {needle(animatedValue, dynamicData, cx, cy, iR, oR, "#d0d000")}
       </PieChart>
-      <h1 className="pie-chart-needle-legend">{100 - failureCount}%</h1>
+      <h1 className="pie-chart-needle-legend">
+        {Math.round(100 - failureRate)}%
+      </h1>
     </div>
   );
 };

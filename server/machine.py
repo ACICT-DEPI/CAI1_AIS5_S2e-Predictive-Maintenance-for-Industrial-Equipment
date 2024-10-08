@@ -1,6 +1,7 @@
 import os
 import random
 import numpy as np
+import pandas as pd
 from helpers import predict_failure
 
 normal_mean = {
@@ -15,12 +16,12 @@ fail_mean = {
     "Process temperature [K]": 310.29,
     "Rotational speed [rpm]": 1496.48,
     "Torque [Nm]": 50.16,
-    "Tool wear [min]": 143.78
+    "Tool wear [min]": 143.78 
 }
 normal_std = {
     "Air temperature [K]": 1.99,
     "Process temperature [K]": 1.48,
-    "Rotational speed [rpm]": 167.39, ### might ruin everything
+    "Rotational speed [rpm]": 167.39,
     "Torque [Nm]": 9.47,
     "Tool wear [min]": 62.94
 }
@@ -28,7 +29,7 @@ fail_std = {
     "Air temperature [K]": 2.07,
     "Process temperature [K]": 1.36,
     "Rotational speed [rpm]": 384.94,
-    "Torque [Nm]": 16.37,
+    "Torque [Nm]":16.37,
     "Tool wear [min]": 72.75
 }
 
@@ -57,17 +58,31 @@ class Machine:
                          "Torque [Nm],Tool wear [min],Machine Failure\n")
 
     def generate_machine_data(self):
-        
+        self.uid = self.get_uid()
         self.product_id = self.generate_product_id()
         self.type = self.product_id[0]
         self.air_temperature = round(self.random_walk(normal_mean["Air temperature [K]"], normal_std["Air temperature [K]"]), 1)
         self.process_temperature = round(self.air_temperature + 10 + self.random_walk(0, normal_std["Process temperature [K]"]), 1)
         self.rotational_speed = round(self.calculate_rotational_speed(normal_mean["Rotational speed [rpm]"], normal_std["Rotational speed [rpm]"]), 1)
         self.torque = round(self.calculate_torque(normal_mean["Torque [Nm]"], normal_std["Torque [Nm]"]), 1)
-        self.tool_wear += round(self.calculate_tool_wear(), 1)
+
+        # check if the last item was a failure or the toolwear exceeded a random number between 199 and 250
+        if(self.tool_wear > random.choice(list(range(199, 250)))):
+            self.tool_wear = 0
+        else :    
+            self.tool_wear += round(self.calculate_tool_wear(), 1)
+
         self.predicted_failure = self.predict_machine_failure()
         self.uid += 1
 
+    def get_uid(self):
+        self.csv_file_path = "./machine_data.csv"
+        if not os.path.exists(self.csv_file_path):
+            return 0
+        else :
+            rows = pd.read_csv( self.csv_file_path)
+            return rows.shape[0]
+                   
     def log_data_to_csv(self):
         csv_line = f"{self.uid},{self.machine_id},{self.product_id}," \
                    f"{self.type},{self.air_temperature}," \

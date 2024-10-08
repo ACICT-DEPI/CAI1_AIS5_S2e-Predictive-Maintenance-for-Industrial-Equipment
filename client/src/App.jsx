@@ -132,7 +132,7 @@ export default function App() {
 
   return (
     <div className="App">
-      <div className="charts-area-container">
+      <div className="charts-area-container" style={{ marginTop: 80 }}>
         <div className="machine-latest-container">
           {machineData.length > 0 ? (
             <div className="machine-latest-information">
@@ -160,7 +160,7 @@ export default function App() {
         </div>
       </div>
       <div className="charts-ctrls-container">
-        {chunkCount > 1 ? (
+        {chunkCount > 1 && (
           <>
             <Typography gutterBottom>Select Chunk:</Typography>
             <Slider
@@ -171,11 +171,14 @@ export default function App() {
               max={chunkCount - 1}
               valueLabelDisplay="auto"
               marks={marks}
+              sx={{
+                "& .MuiSlider-markLabel": {
+                  color: "grey",
+                },
+              }}
               onChange={handleSliderChange}
             />
           </>
-        ) : (
-          <p>No data yet</p>
         )}
       </div>
       <div className="charts-area-container">
