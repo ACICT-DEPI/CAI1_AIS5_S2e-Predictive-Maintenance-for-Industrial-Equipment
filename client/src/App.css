@@ -1,0 +1,131 @@
+#root {
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 0px 1rem;
+  text-align: center;
+  min-height: 100dvh;
+  width: 100%;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+.App {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.charts-area-container {
+  width: 100%;
+  max-width: 1600px;
+  margin: 40px auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.machine-latest-container {
+  border: 1px solid black;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 8px 0px;
+  border-radius: 7px;
+  height: 300px;
+  width: 45%;
+  margin: 0px;
+}
+.machine-latest-information {
+  text-align: left;
+  padding: 0px 30px;
+}
+.chart-card-container {
+  border: 1px solid black;
+  margin: 30px 0px;
+  padding: 20px 0px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 8px 0px;
+  border-radius: 7px;
+}
+.chart-card-p {
+  font-size: 1.3rem;
+  padding: 0px 25px;
+  text-align: left;
+}
+.primary-section-container {
+  max-width: 1600px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.primary-section-right,
+.primary-section-left {
+  border: 1px solid black;
+  border-radius: 7px;
+  margin: 0px 30px;
+}
+.primary-section-left {
+  padding: 20px;
+}
+.primary-section-right h2 {
+  margin-bottom: 0px;
+}
+.pie-chart-needle-container {
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 8px 0px;
+  border: 1px solid black;
+  border-radius: 7px;
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+}
+.pie-chart-header {
+  text-align: left;
+  top: 1%;
+  left: 4%;
+  position: absolute;
+}
+.pie-chart-needle-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.pie-chart-needle-legend {
+  position: absolute;
+  margin: 0px;
+  bottom: 4%;
+}
+.charts-ctrls-container {
+  max-width: 70%;
+  margin: 0 auto;
+}
