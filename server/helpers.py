@@ -1,7 +1,7 @@
 
 import pandas as pd
 
-column_names = ['uid', 'machineId', 'productID',"type","airTemperature","processTemperature","rotationalSpeed","torque","toolWear","predictedFailure"]
+column_names = ['uid', 'machineId', 'productID',"type","airTemperature","processTemperature","rotationalSpeed","torque","toolWear","predictedFailure","confidence"]
 
 def read_machine_data():
     df = pd.read_csv('machine_data.csv', names=column_names, header=0)

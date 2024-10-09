@@ -133,5 +133,6 @@ class Machine:
             "rotationalSpeed": self.rotational_speed,
             "torque": self.torque,
             "toolWear": self.tool_wear,
-            "predictedFailure": self.predicted_failure
+            "predictedFailure": self.predicted_failure,
+            "confidence":self.confidence
         }

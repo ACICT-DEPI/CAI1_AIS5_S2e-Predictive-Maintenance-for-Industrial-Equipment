@@ -90,6 +90,7 @@ export default function App() {
 
     socketRef.current.on("machine_data", (data) => {
       const parsedData = JSON.parse(data);
+      console.log(data);
       updateMachineData(parsedData);
       setStatus(true);
     });

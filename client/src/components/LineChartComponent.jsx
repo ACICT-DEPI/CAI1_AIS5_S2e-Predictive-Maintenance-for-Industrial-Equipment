@@ -21,6 +21,8 @@ export default function LineChartComponent({
 }) {
   const dataLength = data.length;
   const interval = Math.max(1, Math.floor(dataLength / 10));
+  console.log("its me data");
+  console.log(data);
   return (
     <ResponsiveContainer width="100%" height={300}>
       <LineChart
