@@ -15,13 +15,13 @@ thread = None
 thread_lock = Lock()
 
 
-model_path = './model/model.pkl'
+model_path = './model/model(all)(d=4).pkl'
 machine = Machine("A",joblib.load(model_path))
 
 
 def background_thread():
     while True:
-        socketio.sleep(3)
+        socketio.sleep(2)
         machine.generate_machine_data()
         machine.log_data_to_csv()
         machine_status = machine.get_machine_status()

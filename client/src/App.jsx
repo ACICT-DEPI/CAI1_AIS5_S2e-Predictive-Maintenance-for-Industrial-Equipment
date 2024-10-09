@@ -45,6 +45,7 @@ const linecharts = [
 ];
 
 export default function App() {
+  const [status, setStatus] = useState(false);
   const [machineData, setMachineData] = useState([]);
   const [selectedChunk, setSelectedChunk] = useState(-1);
   const [autoUpdate, setAutoUpdate] = useState(true);
@@ -78,6 +79,7 @@ export default function App() {
 
     socketRef.current.on("connect", () => {
       setConnectionStatus("Connected");
+      setStatus(true);
     });
 
     socketRef.current.on("machine_status", (data) => {
@@ -89,14 +91,17 @@ export default function App() {
     socketRef.current.on("machine_data", (data) => {
       const parsedData = JSON.parse(data);
       updateMachineData(parsedData);
+      setStatus(true);
     });
 
     socketRef.current.on("disconnect", () => {
       setConnectionStatus("Disconnected. Attempting to reconnect...");
+      setStatus(false);
     });
 
     socketRef.current.on("connect_error", () => {
       setConnectionStatus("Connection Error");
+      setStatus(false);
     });
     return () => {
       if (socketRef.current) {
@@ -137,18 +142,41 @@ export default function App() {
           {machineData.length > 0 ? (
             <div className="machine-latest-information">
               <h2>Latest Data:</h2>
-              <h3>UID: {machineData[machineData.length - 1].uid}</h3>
-              <p>Product ID: {machineData[machineData.length - 1].productID}</p>
-              <p>
-                Predicted Failure:{" "}
-                {machineData[machineData.length - 1].predictedFailure
-                  ? "Yes"
-                  : "No"}
+              <h3>
+                Current Iteration: {machineData[machineData.length - 1].uid}
+              </h3>
+              <p className="machine-latest-information-p">
+                Working on product :
+                {" " + machineData[machineData.length - 1].productID}
+              </p>
+              <p className="machine-latest-information-p ">
+                Successful Products:{" "}
+                {machineData.length -
+                  machineData.filter((log) => log.predictedFailure === true)
+                    .length}
+              </p>
+              <p className="machine-latest-information-p ">
+                Number of failures:{" "}
+                {
+                  machineData.filter((log) => log.predictedFailure === true)
+                    .length
+                }
               </p>
             </div>
           ) : (
             <p>No data available.</p>
           )}
+          <div className="machine-latest-information-status">
+            <div className="status-indicator-container">
+              <p className="status-indicator-container-text">
+                {status === true ? "ON" : "OFF"}
+              </p>
+              <div
+                className="status-indicator"
+                style={{ backgroundColor: status === true ? "green" : "red" }}
+              ></div>
+            </div>
+          </div>
         </div>
         <div className="pie-chart-needle-container" style={{ width: "45%" }}>
           <h2 className="pie-chart-header">Machine Status:</h2>
@@ -162,7 +190,9 @@ export default function App() {
       <div className="charts-ctrls-container">
         {chunkCount > 1 && (
           <>
-            <Typography gutterBottom>Select Chunk:</Typography>
+            <Typography gutterBottom style={{ marginTop: 20, marginBottom: 0 }}>
+              Select Chunk:
+            </Typography>
             <Slider
               aria-label="Custom marks"
               value={selectedChunk}

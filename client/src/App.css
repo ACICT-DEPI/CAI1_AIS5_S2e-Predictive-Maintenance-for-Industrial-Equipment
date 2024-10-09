@@ -57,6 +57,8 @@
   justify-content: space-evenly;
 }
 .machine-latest-container {
+  display: flex;
+  justify-content: space-between;
   border: 1px solid black;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 8px 0px;
   border-radius: 7px;
@@ -129,4 +131,29 @@
 .charts-ctrls-container {
   max-width: 70%;
   margin: 0 auto;
+}
+.machine-latest-information-p {
+  max-width: 400px;
+  font-size: 1.2rem;
+  letter-spacing: -0.5px;
+}
+.status-indicator {
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+}
+.status-indicator-container {
+  margin: 5px 0px;
+  display: flex;
+  justify-content: space-between;
+}
+.status-indicator-container-text {
+  margin: 0px 20px;
+  align-self: center;
+}
+.machine-latest-information-status {
+  margin: 5px 10px;
+}
+.aoo {
+  color: #270d0d;
 }

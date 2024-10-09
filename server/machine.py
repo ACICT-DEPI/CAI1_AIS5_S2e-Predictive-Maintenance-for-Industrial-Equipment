@@ -28,8 +28,8 @@ normal_std = {
 fail_std = {
     "Air temperature [K]": 2.07,
     "Process temperature [K]": 1.36,
-    "Rotational speed [rpm]": 384.94,
-    "Torque [Nm]":16.37,
+    "Rotational speed [rpm]": 384.94 ,#+ 300
+    "Torque [Nm]":16.37,#+ 10
     "Tool wear [min]": 72.75
 }
 
@@ -49,22 +49,23 @@ class Machine:
         self.tool_wear = 0
         self.predicted_failure = False
         self.model = model
+        self.confidence = 0
 
         self.csv_file_path = "machine_data.csv"
         if not os.path.exists(self.csv_file_path):
             with open(self.csv_file_path, 'w') as f:
                 f.write("UID,Machine ID,Product ID,Type,Air temperature [K],"
                          "Process temperature [K],Rotational speed [rpm],"
-                         "Torque [Nm],Tool wear [min],Machine Failure\n")
+                         "Torque [Nm],Tool wear [min],Machine Failure,Confidence\n")
 
     def generate_machine_data(self):
         self.uid = self.get_uid()
         self.product_id = self.generate_product_id()
         self.type = self.product_id[0]
-        self.air_temperature = round(self.random_walk(normal_mean["Air temperature [K]"], normal_std["Air temperature [K]"]), 1)
-        self.process_temperature = round(self.air_temperature + 10 + self.random_walk(0, normal_std["Process temperature [K]"]), 1)
-        self.rotational_speed = round(self.calculate_rotational_speed(normal_mean["Rotational speed [rpm]"], normal_std["Rotational speed [rpm]"]), 1)
-        self.torque = round(self.calculate_torque(normal_mean["Torque [Nm]"], normal_std["Torque [Nm]"]), 1)
+        self.air_temperature = round(self.random_walk(fail_mean["Air temperature [K]"], fail_std["Air temperature [K]"]), 1)
+        self.process_temperature = round(self.air_temperature + 10 + self.random_walk(0, fail_std["Process temperature [K]"]), 1)
+        self.rotational_speed = round(self.calculate_rotational_speed(fail_mean["Rotational speed [rpm]"], fail_std["Rotational speed [rpm]"]), 1)
+        self.torque = round(self.calculate_torque(fail_mean["Torque [Nm]"], fail_std["Torque [Nm]"]), 1)
 
         # check if the last item was a failure or the toolwear exceeded a random number between 199 and 250
         if(self.tool_wear > random.choice(list(range(199, 250)))):
@@ -72,7 +73,7 @@ class Machine:
         else :    
             self.tool_wear += round(self.calculate_tool_wear(), 1)
 
-        self.predicted_failure = self.predict_machine_failure()
+        self.predicted_failure,self.confidence = self.predict_machine_failure()
         self.uid += 1
 
     def get_uid(self):
@@ -88,7 +89,7 @@ class Machine:
                    f"{self.type},{self.air_temperature}," \
                    f"{self.process_temperature},{self.rotational_speed}," \
                    f"{self.torque},{self.tool_wear}," \
-                   f"{self.predicted_failure}\n"
+                   f"{self.predicted_failure},{self.confidence}\n"
 
         with open(self.csv_file_path, 'a') as f:
             f.write(csv_line)

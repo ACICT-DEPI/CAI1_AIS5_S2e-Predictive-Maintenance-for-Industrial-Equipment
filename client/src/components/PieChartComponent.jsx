@@ -40,32 +40,56 @@ const needle = (value, data, cx, cy, iR, oR, color) => {
 const PieChartComponent = ({ logs }) => {
   const failureCount = logs.filter((log) => log.predictedFailure).length;
   const totalLogs = logs.length;
-  const failureRate = totalLogs ? (failureCount / totalLogs) * 100 : 0;
+  const failureRate = totalLogs
+    ? Math.round((failureCount / totalLogs) * 100)
+    : 0;
 
   const dynamicData = [
-    { name: "Normal", value: 80, color: "#00ff00" },
-    { name: "Failure", value: 20, color: "#ff0000" },
+    { name: "Normal", value: 40, color: "#00ff00" },
+    { name: "Failure", value: 60, color: "#ff0000" },
   ];
 
-  const [animatedValue, setAnimatedValue] = useState(0); // State for needle animation
+  const [animatedFailureRate, setAnimatedFailureRate] = useState(0);
+  //const [animatedValue, setAnimatedValue] = useState(0); // State for needle animation
 
   useEffect(() => {
-    let animationFrame;
-    const increment = () => {
-      setAnimatedValue((prev) => {
-        if (prev < failureRate) {
-          return Math.min(prev + 1, failureRate); // Increment by 1 until the failureRate is reached
-        } else {
-          cancelAnimationFrame(animationFrame); // Stop the animation once the target is reached
-          return prev;
-        }
-      });
-      animationFrame = requestAnimationFrame(increment);
+    let start = null;
+    const duration = 1000; // Animation duration in milliseconds
+
+    const animate = (timestamp) => {
+      if (!start) start = timestamp;
+      const progress = timestamp - start;
+      const percentage = Math.min(progress / duration, 1);
+
+      setAnimatedFailureRate(
+        (prevRate) => prevRate + (failureRate - prevRate) * percentage
+      );
+
+      if (progress < duration) {
+        requestAnimationFrame(animate);
+      }
     };
-    increment();
-    return () => cancelAnimationFrame(animationFrame);
+
+    requestAnimationFrame(animate);
   }, [failureRate]);
-  console.log(failureRate);
+
+  // useEffect(() => {
+  //   let animationFrame;
+  //   const increment = () => {
+  //     setAnimatedValue((prev) => {
+  //       if (prev < failureRate) {
+  //         return Math.min(prev + 1, failureRate); // Increment by 1 until the failureRate is reached
+  //       } else {
+  //         cancelAnimationFrame(animationFrame); // Stop the animation once the target is reached
+  //         return prev;
+  //       }
+  //     });
+  //     animationFrame = requestAnimationFrame(increment);
+  //   };
+  //   increment();
+  //   return () => cancelAnimationFrame(animationFrame);
+  // }, [failureRate]);
+  // console.log(failureRate);
   return (
     <div className="pie-chart-needle-wrapper">
       <PieChart width={300} height={300}>
@@ -85,7 +109,7 @@ const PieChartComponent = ({ logs }) => {
             <Cell key={`cell-${index}`} fill={entry.color} />
           ))}
         </Pie>
-        {needle(animatedValue, dynamicData, cx, cy, iR, oR, "#d0d000")}
+        {needle(animatedFailureRate, dynamicData, cx, cy, iR, oR, "#d0d000")}
       </PieChart>
       <h1 className="pie-chart-needle-legend">
         {Math.round(100 - failureRate)}%

@@ -23,5 +23,7 @@ def predict_failure(saved_model,machine_data):
 
     transformed_input = ct.transform(input_data)
     prediction = model.predict(transformed_input)
+    prediction_proba = model.predict_proba(transformed_input)
+    failure_proba = prediction_proba[0][1]
 
-    return bool(prediction[0]) 
+    return bool(prediction[0]),failure_proba
