@@ -4,34 +4,42 @@ import numpy as np
 import pandas as pd
 from helpers import predict_failure
 
-normal_mean = {
-    "Air temperature [K]": 299.97,
-    "Process temperature [K]": 309.99,
-    "Rotational speed [rpm]": 1540.26,
-    "Torque [Nm]": 39.9,
-    "Tool wear [min]": 106.69
+mean = {
+    "normal" : {
+        "Air temperature [K]": 299.97,
+        "Process temperature [K]": 309.99,
+        "Rotational speed [rpm]": 1540.26,
+        "Torque [Nm]": 39.9,
+        "Tool wear [min]": 106.69
+    },
+    "fail" : {
+        "Air temperature [K]": 300.88,
+        "Process temperature [K]": 310.29,
+        "Rotational speed [rpm]": 1496.48,
+        "Torque [Nm]": 50.16,
+        "Tool wear [min]": 143.78 
+    }
 }
-fail_mean = {
-    "Air temperature [K]": 300.88,
-    "Process temperature [K]": 310.29,
-    "Rotational speed [rpm]": 1496.48,
-    "Torque [Nm]": 50.16,
-    "Tool wear [min]": 143.78 
-}
-normal_std = {
+std = {
+    "normal": {
     "Air temperature [K]": 1.99,
     "Process temperature [K]": 1.48,
     "Rotational speed [rpm]": 167.39,
     "Torque [Nm]": 9.47,
     "Tool wear [min]": 62.94
-}
-fail_std = {
+    },
+    "fail" : {
     "Air temperature [K]": 2.07,
     "Process temperature [K]": 1.36,
-    "Rotational speed [rpm]": 384.94 ,#+ 300
-    "Torque [Nm]":16.37,#+ 10
+    "Rotational speed [rpm]": 384.94 ,
+    "Torque [Nm]":16.37,
     "Tool wear [min]": 72.75
+    }
 }
+
+
+
+
 
 
 
@@ -50,6 +58,7 @@ class Machine:
         self.predicted_failure = False
         self.model = model
         self.confidence = 0
+        self.machine_mode = "normal" 
 
         self.csv_file_path = "machine_data.csv"
         if not os.path.exists(self.csv_file_path):
@@ -62,10 +71,10 @@ class Machine:
         self.uid = self.get_uid()
         self.product_id = self.generate_product_id()
         self.type = self.product_id[0]
-        self.air_temperature = round(self.random_walk(fail_mean["Air temperature [K]"], fail_std["Air temperature [K]"]), 1)
-        self.process_temperature = round(self.air_temperature + 10 + self.random_walk(0, fail_std["Process temperature [K]"]), 1)
-        self.rotational_speed = round(self.calculate_rotational_speed(fail_mean["Rotational speed [rpm]"], fail_std["Rotational speed [rpm]"]), 1)
-        self.torque = round(self.calculate_torque(fail_mean["Torque [Nm]"], fail_std["Torque [Nm]"]), 1)
+        self.air_temperature = round(self.random_walk(mean[self.machine_mode]["Air temperature [K]"], std[self.machine_mode]["Air temperature [K]"]), 1)
+        self.process_temperature = round(self.air_temperature + 10 + self.random_walk(0, std[self.machine_mode]["Process temperature [K]"]), 1)
+        self.rotational_speed = round(self.calculate_rotational_speed(mean[self.machine_mode]["Rotational speed [rpm]"], std[self.machine_mode]["Rotational speed [rpm]"]), 1)
+        self.torque = round(self.calculate_torque(mean[self.machine_mode]["Torque [Nm]"], std[self.machine_mode]["Torque [Nm]"]), 1)
 
         # check if the last item was a failure or the toolwear exceeded a random number between 199 and 250
         if(self.tool_wear > random.choice(list(range(199, 250)))):
@@ -136,3 +145,5 @@ class Machine:
             "predictedFailure": self.predicted_failure,
             "confidence":self.confidence
         }
+    def set_machine_mode(self,mode):
+        self.machine_mode = mode

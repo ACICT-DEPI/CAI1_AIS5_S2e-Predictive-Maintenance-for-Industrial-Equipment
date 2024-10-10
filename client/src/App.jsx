@@ -4,9 +4,8 @@ import { io } from "socket.io-client";
 import LineChartComponent from "./components/LineChartComponent";
 import BarChartComponent from "./components/BarChartComponent";
 import PieChartComponent from "./components/PieChartComponent";
-import Slider from "@mui/material/Slider";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
+import MachineStatusInformation from "./components/MachineStatusComponent";
+import ChartsChunkComponent from "./components/ChartsChunkComponent";
 
 const CHUNK_SIZE = 200;
 const linecharts = [
@@ -15,7 +14,7 @@ const linecharts = [
     name: "Rotational Speed (rpm)",
     color: "#ffc658",
     minY: 0,
-    maxY: 3000,
+    maxY: 3500,
     width: "45%",
   },
   {
@@ -139,46 +138,10 @@ export default function App() {
   return (
     <div className="App">
       <div className="charts-area-container" style={{ marginTop: 80 }}>
-        <div className="machine-latest-container">
-          {machineData.length > 0 ? (
-            <div className="machine-latest-information">
-              <h2>Latest Data:</h2>
-              <h3>
-                Current Iteration: {machineData[machineData.length - 1].uid}
-              </h3>
-              <p className="machine-latest-information-p">
-                Working on product :
-                {" " + machineData[machineData.length - 1].productID}
-              </p>
-              <p className="machine-latest-information-p ">
-                Successful Products:{" "}
-                {machineData.length -
-                  machineData.filter((log) => log.predictedFailure === true)
-                    .length}
-              </p>
-              <p className="machine-latest-information-p ">
-                Number of failures:{" "}
-                {
-                  machineData.filter((log) => log.predictedFailure === true)
-                    .length
-                }
-              </p>
-            </div>
-          ) : (
-            <p>No data available.</p>
-          )}
-          <div className="machine-latest-information-status">
-            <div className="status-indicator-container">
-              <p className="status-indicator-container-text">
-                {status === true ? "ON" : "OFF"}
-              </p>
-              <div
-                className="status-indicator"
-                style={{ backgroundColor: status === true ? "green" : "red" }}
-              ></div>
-            </div>
-          </div>
-        </div>
+        <MachineStatusInformation
+          machineData={machineData}
+          connectionStatus={status}
+        />
         <div className="pie-chart-needle-container" style={{ width: "45%" }}>
           <h2 className="pie-chart-header">Machine Status:</h2>
           {machineData.length > 0 ? (
@@ -188,30 +151,12 @@ export default function App() {
           )}
         </div>
       </div>
-      <div className="charts-ctrls-container">
-        {chunkCount > 1 && (
-          <>
-            <Typography gutterBottom style={{ marginTop: 20, marginBottom: 0 }}>
-              Select Chunk:
-            </Typography>
-            <Slider
-              aria-label="Custom marks"
-              value={selectedChunk}
-              step={1}
-              min={0}
-              max={chunkCount - 1}
-              valueLabelDisplay="auto"
-              marks={marks}
-              sx={{
-                "& .MuiSlider-markLabel": {
-                  color: "grey",
-                },
-              }}
-              onChange={handleSliderChange}
-            />
-          </>
-        )}
-      </div>
+      <ChartsChunkComponent
+        changeHandler={handleSliderChange}
+        marks={marks}
+        selectedChunk={selectedChunk}
+        chunkCount={chunkCount}
+      />
       <div className="charts-area-container">
         {linecharts.map((chart) => (
           <div

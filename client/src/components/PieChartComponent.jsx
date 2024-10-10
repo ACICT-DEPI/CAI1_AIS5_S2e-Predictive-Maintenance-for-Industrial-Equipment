@@ -45,8 +45,8 @@ const PieChartComponent = ({ logs }) => {
     : 0;
 
   const dynamicData = [
-    { name: "Normal", value: 40, color: "#00ff00" },
-    { name: "Failure", value: 60, color: "#ff0000" },
+    { name: "Normal", value: 30, color: "#00ff00" },
+    { name: "Failure", value: 70, color: "#ff0000" },
   ];
 
   const [animatedFailureRate, setAnimatedFailureRate] = useState(0);
