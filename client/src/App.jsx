@@ -78,20 +78,19 @@ export default function App() {
 
     socketRef.current.on("connect", () => {
       setConnectionStatus("Connected");
-      setStatus(true);
     });
 
     socketRef.current.on("machine_status", (data) => {
       const parsedData = JSON.parse(data);
       console.log(parsedData);
       updateMachineData(parsedData);
+      setStatus(true);
     });
 
     socketRef.current.on("machine_data", (data) => {
       const parsedData = JSON.parse(data);
       console.log(data);
       updateMachineData(parsedData);
-      setStatus(true);
     });
 
     socketRef.current.on("disconnect", () => {
@@ -111,12 +110,13 @@ export default function App() {
   }, [updateMachineData]);
 
   const getTypeCounts = () => {
-    const counts = { M: 0, H: 0, L: 0 };
+    const counts = { M: 0, H: 0, L: 0, F: 0 };
     machineData.forEach((item) => {
-      if (item.type in counts) {
-        counts[item.type]++;
-      }
+      if (item.predictedFailure) counts["F"]++;
+      else counts[item.type]++;
     });
+
+    // Convert counts object to an array of objects with type and count
     return Object.entries(counts).map(([type, count]) => ({ type, count }));
   };
 
@@ -139,6 +139,7 @@ export default function App() {
     <div className="App">
       <div className="charts-area-container" style={{ marginTop: 80 }}>
         <MachineStatusInformation
+          connectionStatusHandler={setStatus}
           machineData={machineData}
           connectionStatus={status}
         />

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
+const ERROR_LIMIT = 30;
 const RADIAN = Math.PI / 180;
 const cx = 150;
 const cy = 200;
@@ -45,16 +46,15 @@ const PieChartComponent = ({ logs }) => {
     : 0;
 
   const dynamicData = [
-    { name: "Normal", value: 30, color: "#00ff00" },
-    { name: "Failure", value: 70, color: "#ff0000" },
+    { name: "Normal", value: ERROR_LIMIT, color: "#00ff00" },
+    { name: "Failure", value: 100 - ERROR_LIMIT, color: "#ff0000" },
   ];
 
   const [animatedFailureRate, setAnimatedFailureRate] = useState(0);
-  //const [animatedValue, setAnimatedValue] = useState(0); // State for needle animation
 
   useEffect(() => {
     let start = null;
-    const duration = 1000; // Animation duration in milliseconds
+    const duration = 1000;
 
     const animate = (timestamp) => {
       if (!start) start = timestamp;
@@ -73,23 +73,6 @@ const PieChartComponent = ({ logs }) => {
     requestAnimationFrame(animate);
   }, [failureRate]);
 
-  // useEffect(() => {
-  //   let animationFrame;
-  //   const increment = () => {
-  //     setAnimatedValue((prev) => {
-  //       if (prev < failureRate) {
-  //         return Math.min(prev + 1, failureRate); // Increment by 1 until the failureRate is reached
-  //       } else {
-  //         cancelAnimationFrame(animationFrame); // Stop the animation once the target is reached
-  //         return prev;
-  //       }
-  //     });
-  //     animationFrame = requestAnimationFrame(increment);
-  //   };
-  //   increment();
-  //   return () => cancelAnimationFrame(animationFrame);
-  // }, [failureRate]);
-  // console.log(failureRate);
   return (
     <div className="pie-chart-needle-wrapper">
       <PieChart width={300} height={300}>

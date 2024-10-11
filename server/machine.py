@@ -59,13 +59,8 @@ class Machine:
         self.model = model
         self.confidence = 0
         self.machine_mode = "normal" 
-
         self.csv_file_path = "machine_data.csv"
-        if not os.path.exists(self.csv_file_path):
-            with open(self.csv_file_path, 'w') as f:
-                f.write("UID,Machine ID,Product ID,Type,Air temperature [K],"
-                         "Process temperature [K],Rotational speed [rpm],"
-                         "Torque [Nm],Tool wear [min],Machine Failure,Confidence\n")
+        
 
     def generate_machine_data(self):
         self.uid = self.get_uid()
@@ -92,8 +87,18 @@ class Machine:
         else :
             rows = pd.read_csv( self.csv_file_path)
             return rows.shape[0]
-                   
+        
+
+    def create_csv_file(self):
+        if not os.path.exists(self.csv_file_path):
+            with open(self.csv_file_path, 'w') as f:
+                f.write("UID,Machine ID,Product ID,Type,Air temperature [K],"
+                         "Process temperature [K],Rotational speed [rpm],"
+                         "Torque [Nm],Tool wear [min],Machine Failure,Confidence\n")
+                
+                
     def log_data_to_csv(self):
+        self.create_csv_file()
         csv_line = f"{self.uid},{self.machine_id},{self.product_id}," \
                    f"{self.type},{self.air_temperature}," \
                    f"{self.process_temperature},{self.rotational_speed}," \
@@ -129,7 +134,7 @@ class Machine:
 
     def predict_machine_failure(self):
         
-        return predict_failure(self.model,self)
+        return predict_failure(self)
 
     def get_machine_status(self):
         return {
