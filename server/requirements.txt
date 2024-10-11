@@ -1,0 +1,7 @@
+Flask
+Flask-SocketIO
+joblib
+pandas
+requests
+python-dotenv
+numpy

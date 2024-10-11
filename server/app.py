@@ -39,7 +39,7 @@ def handle_connect():
 def handle_disconnect():
     print("Client disconnected")
 
-@app.route('/machine-mode', methods=['POST'])
+@app.route('/api/machine-mode', methods=['POST'])
 def set_machine_mode():
     if machine_mode == False : return jsonify({"status": "error", "message": "Machine is turned off turn it on first"}),403
     global machine_failure
@@ -51,7 +51,7 @@ def set_machine_mode():
         machine.set_machine_mode(mode="normal")
         return jsonify({"status": "success", "message": "Machine set to Normal"}), 200
     
-@app.route('/clear-data', methods=['POST'])
+@app.route('/api/clear-data', methods=['POST'])
 def clear_machine_data():
    file_path = './machine_data.csv'
    if machine_mode == True : return jsonify({"status": "error", "message": "Machine is turned on turn it off first"}),403
@@ -64,7 +64,7 @@ def clear_machine_data():
    else:
         return jsonify({"status": "error", "message": "File not found"}), 404
     
-@app.route('/machine-toggle', methods=['POST'])
+@app.route('/api/machine-toggle', methods=['POST'])
 def set_machine_toggle():
     global machine_mode 
     machine_mode = not machine_mode

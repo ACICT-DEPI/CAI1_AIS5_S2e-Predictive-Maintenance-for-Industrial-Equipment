@@ -13,7 +13,7 @@ export default function MachineStatusInformation({
   const handleStatusToggle = () => {
     setLoading(true);
     axios
-      .post("/machine-toggle")
+      .post("/api/machine-toggle")
       .then((response) => {
         if (response.status === 200) connectionStatusHandler(!connectionStatus);
       })
@@ -28,7 +28,7 @@ export default function MachineStatusInformation({
   const handleFailureToggle = () => {
     setLoading(true);
     axios
-      .post("/machine-mode")
+      .post("/api/machine-mode")
       .then((response) => {
         if (response.status === 200) {
           setFailure(!failure);
@@ -46,7 +46,7 @@ export default function MachineStatusInformation({
   const handleClearData = () => {
     setLoading(true);
     axios
-      .post("/clear-data")
+      .post("/api/clear-data")
       .then((response) => {
         if (response.status === 200) window.location.reload();
       })
