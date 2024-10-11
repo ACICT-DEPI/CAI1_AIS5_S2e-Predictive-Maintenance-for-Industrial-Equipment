@@ -45,7 +45,7 @@ std = {
 
 
 class Machine:
-    def __init__(self, machine_id,model):
+    def __init__(self, machine_id):
         self.machine_id = machine_id
         self.uid = 0
         self.product_id = ""
@@ -56,7 +56,6 @@ class Machine:
         self.torque = 0
         self.tool_wear = 0
         self.predicted_failure = False
-        self.model = model
         self.confidence = 0
         self.machine_mode = "normal" 
         self.csv_file_path = "machine_data.csv"

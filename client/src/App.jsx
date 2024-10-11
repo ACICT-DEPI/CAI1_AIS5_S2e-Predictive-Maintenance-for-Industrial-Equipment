@@ -74,7 +74,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    socketRef.current = io("http://127.0.0.1:5000");
+    socketRef.current = io();
 
     socketRef.current.on("connect", () => {
       setConnectionStatus("Connected");
@@ -115,8 +115,6 @@ export default function App() {
       if (item.predictedFailure) counts["F"]++;
       else counts[item.type]++;
     });
-
-    // Convert counts object to an array of objects with type and count
     return Object.entries(counts).map(([type, count]) => ({ type, count }));
   };
 

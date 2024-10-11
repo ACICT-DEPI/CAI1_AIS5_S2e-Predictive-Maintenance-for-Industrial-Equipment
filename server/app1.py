@@ -1,20 +1,34 @@
+import os
 import json
 import joblib
+import argparse
 from flask import Flask, request, jsonify, send_from_directory
 from flask_socketio import SocketIO, emit
 from machine import Machine
-from helpers import read_machine_data
+from  helpers import read_machine_data
 from threading import Thread, Lock
-import os
+from flask_cors import CORS
+
 
 async_mode = None
+def create_app(serve_frontend=False):
+    if serve_frontend:
+        static_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'client', 'dist'))
+        if not os.path.exists(static_folder):
+            raise ValueError(f"Frontend path does not exist: {static_folder}")
+        app = Flask(__name__, static_folder=static_folder, static_url_path='')
+    else:
+        app = Flask(__name__)
+    
+    CORS(app)
+    return app
 
-app = Flask(__name__, static_folder='../client/dist', static_url_path='/')
+app = create_app()
 socketio = SocketIO(app, async_mode=async_mode, cors_allowed_origins="*")
 thread = None
-machine_failure = False
-machine_mode =  False
 thread_lock = Lock()
+machine_mode =  False
+machine_failure = False
 model_path = './model/model(all)(d=4).pkl'
 machine = Machine("A")
 
@@ -89,14 +103,27 @@ def stop_background_task():
         thread.join()
         thread = None
 
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def serve_react_app(path):
-    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
-        return send_from_directory(app.static_folder, path)
-    else:
-        return send_from_directory(app.static_folder, 'index.html')
+# Only add this route if serving frontend
+def add_frontend_route(app):
+    @app.route('/', defaults={'path': ''})
+    @app.route('/<path:path>')
+    def serve(path):
+        if path != "" and os.path.exists(app.static_folder + '/' + path):
+            return send_from_directory(app.static_folder, path)
+        else:
+            return send_from_directory(app.static_folder, 'index.html')
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Run Flask app with optional frontend serving')
+    parser.add_argument('--serve-frontend', action='store_true', help='Serve React frontend')
+    args = parser.parse_args()
+
+    if args.serve_frontend:
+        app = create_app(serve_frontend=True)
+        add_frontend_route(app)
+        print("Serving React frontend along with the backend")
+    else:
+        print("Running backend-only mode")
+
     PORT = 5000
-    socketio.run(app, port=PORT)
+    socketio.run(app,host='0.0.0.0' ,port=PORT)
