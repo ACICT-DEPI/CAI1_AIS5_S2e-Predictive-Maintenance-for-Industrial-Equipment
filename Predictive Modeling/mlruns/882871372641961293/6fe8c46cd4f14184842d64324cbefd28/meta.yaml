@@ -1,0 +1,15 @@
+artifact_uri: file:///f:/DEPI/predictive-maintenance/Predictive%20Modeling/mlruns/882871372641961293/6fe8c46cd4f14184842d64324cbefd28/artifacts
+end_time: 1728760863069
+entry_point_name: ''
+experiment_id: '882871372641961293'
+lifecycle_stage: active
+run_id: 6fe8c46cd4f14184842d64324cbefd28
+run_name: Logistic Regression with SMOTE
+run_uuid: 6fe8c46cd4f14184842d64324cbefd28
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1728760858349
+status: 3
+tags: []
+user_id: youse

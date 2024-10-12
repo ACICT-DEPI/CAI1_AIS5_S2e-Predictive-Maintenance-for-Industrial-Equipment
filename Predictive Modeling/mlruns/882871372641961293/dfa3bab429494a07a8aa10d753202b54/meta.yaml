@@ -1,0 +1,15 @@
+artifact_uri: file:///f:/DEPI/predictive-maintenance/Predictive%20Modeling/mlruns/882871372641961293/dfa3bab429494a07a8aa10d753202b54/artifacts
+end_time: 1728760886056
+entry_point_name: ''
+experiment_id: '882871372641961293'
+lifecycle_stage: active
+run_id: dfa3bab429494a07a8aa10d753202b54
+run_name: Decision Tree with SMOTE
+run_uuid: dfa3bab429494a07a8aa10d753202b54
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1728760881645
+status: 3
+tags: []
+user_id: youse
