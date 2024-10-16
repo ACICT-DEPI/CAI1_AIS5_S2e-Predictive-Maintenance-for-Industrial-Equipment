@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-column_names = ['uid', 'machineId', 'productID',"type","airTemperature","processTemperature","rotationalSpeed","torque","toolWear","predictedFailure","confidence"]
+column_names = ['uid', 'machineId', 'productID',"type","airTemperature","processTemperature","rotationalSpeed","torque","toolWear","predictedFailure","confidence","log"]
 
 def read_machine_data():
     df = pd.read_csv('machine_data.csv', names=column_names, header=0)
@@ -55,5 +55,5 @@ def predict_failure(machine_data):
         return
     response = json.loads(response.json())
     response = response["result"]
-    return bool(response["class"][0]),max(response["confidence"][0])
+    return bool(response["class"][0]),round(max(response["confidence"][0]),1)
     

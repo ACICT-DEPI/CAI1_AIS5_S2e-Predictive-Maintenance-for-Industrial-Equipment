@@ -1,4 +1,5 @@
 import os
+from  datetime import datetime
 import random
 import numpy as np
 import pandas as pd
@@ -37,13 +38,10 @@ std = {
     }
 }
 
-
-
-
-
-
-
-
+key_words = {
+            "L":"Low","M":"Medium","H":"High",
+            "False":"normal","True":"abnormal"
+            }
 class Machine:
     def __init__(self, machine_id):
         self.machine_id = machine_id
@@ -59,6 +57,7 @@ class Machine:
         self.confidence = 0
         self.machine_mode = "normal" 
         self.csv_file_path = "machine_data.csv"
+        self.log = ""
         
 
     def generate_machine_data(self):
@@ -69,8 +68,6 @@ class Machine:
         self.process_temperature = round(self.air_temperature + 10 + self.random_walk(0, std[self.machine_mode]["Process temperature [K]"]), 1)
         self.rotational_speed = round(self.calculate_rotational_speed(mean[self.machine_mode]["Rotational speed [rpm]"], std[self.machine_mode]["Rotational speed [rpm]"]), 1)
         self.torque = round(self.calculate_torque(mean[self.machine_mode]["Torque [Nm]"], std[self.machine_mode]["Torque [Nm]"]), 1)
-
-        # check if the last item was a failure or the toolwear exceeded a random number between 199 and 250
         if(self.tool_wear > random.choice(list(range(199, 250)))):
             self.tool_wear = 0
         else :    
@@ -78,6 +75,8 @@ class Machine:
 
         self.predicted_failure,self.confidence = self.predict_machine_failure()
         self.uid += 1
+        self.log = f'[{datetime.now().strftime("%H:%M:%S")}]: Machine {self.machine_id} Working on Product {self.uid} of type {key_words[self.type]} shows signs of {key_words[str(self.predicted_failure)]} running conditions with confidence of {self.confidence}'
+
 
     def get_uid(self):
         self.csv_file_path = "./machine_data.csv"
@@ -93,7 +92,7 @@ class Machine:
             with open(self.csv_file_path, 'w') as f:
                 f.write("UID,Machine ID,Product ID,Type,Air temperature [K],"
                          "Process temperature [K],Rotational speed [rpm],"
-                         "Torque [Nm],Tool wear [min],Machine Failure,Confidence\n")
+                         "Torque [Nm],Tool wear [min],Machine Failure,Confidence,logs\n")
                 
                 
     def log_data_to_csv(self):
@@ -102,7 +101,7 @@ class Machine:
                    f"{self.type},{self.air_temperature}," \
                    f"{self.process_temperature},{self.rotational_speed}," \
                    f"{self.torque},{self.tool_wear}," \
-                   f"{self.predicted_failure},{self.confidence}\n"
+                   f"{self.predicted_failure},{self.confidence},{self.log}\n"
 
         with open(self.csv_file_path, 'a') as f:
             f.write(csv_line)
@@ -147,7 +146,8 @@ class Machine:
             "torque": self.torque,
             "toolWear": self.tool_wear,
             "predictedFailure": self.predicted_failure,
-            "confidence":self.confidence
+            "confidence":self.confidence,
+            "log":self.log
         }
     def set_machine_mode(self,mode):
         self.machine_mode = mode
