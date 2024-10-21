@@ -1,0 +1,15 @@
+artifact_uri: file:///f:/DEPI/predictive-maintenance/Predictive%20Modeling/mlruns/261046063232089596/fc3b1e1ed2d34e4399a488fb07ba041f/artifacts
+end_time: 1728830237164
+entry_point_name: ''
+experiment_id: '261046063232089596'
+lifecycle_stage: active
+run_id: fc3b1e1ed2d34e4399a488fb07ba041f
+run_name: Decision Tree
+run_uuid: fc3b1e1ed2d34e4399a488fb07ba041f
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1728830233250
+status: 3
+tags: []
+user_id: youse

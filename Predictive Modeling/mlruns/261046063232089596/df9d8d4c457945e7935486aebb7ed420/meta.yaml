@@ -1,0 +1,15 @@
+artifact_uri: file:///f:/DEPI/predictive-maintenance/Predictive%20Modeling/mlruns/261046063232089596/df9d8d4c457945e7935486aebb7ed420/artifacts
+end_time: 1728830242143
+entry_point_name: ''
+experiment_id: '261046063232089596'
+lifecycle_stage: active
+run_id: df9d8d4c457945e7935486aebb7ed420
+run_name: Random Forest
+run_uuid: df9d8d4c457945e7935486aebb7ed420
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1728830238038
+status: 3
+tags: []
+user_id: youse

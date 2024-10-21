@@ -1,0 +1,15 @@
+artifact_uri: file:///f:/DEPI/predictive-maintenance/Predictive%20Modeling/mlruns/261046063232089596/8084f88d20b444c0b13dee48429ad8ff/artifacts
+end_time: 1728830227437
+entry_point_name: ''
+experiment_id: '261046063232089596'
+lifecycle_stage: active
+run_id: 8084f88d20b444c0b13dee48429ad8ff
+run_name: SVM
+run_uuid: 8084f88d20b444c0b13dee48429ad8ff
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1728830223442
+status: 3
+tags: []
+user_id: youse
